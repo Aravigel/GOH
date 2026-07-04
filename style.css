@@ -1,0 +1,276 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #0b0f19;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+#gameCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+#ui-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+    padding: 12px;
+}
+
+#barras-superiores, #dpad, .controles-derecha, #contenedor-boton-inv, #ventana-menu, #acceso-rapido-pociones, #modal-asignar {
+    pointer-events: auto;
+}
+
+/* --- BARRAS SUPERIORES --- */
+#barras-superiores {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 200px;
+}
+
+#info-nivel { 
+    color: #fbbf24; 
+    font-weight: bold; 
+    font-size: 13px; 
+    text-shadow: 1px 1px 2px black; 
+}
+
+#puntos-skill-alerta { 
+    color: #34d399; 
+    font-weight: bold; 
+    font-size: 11px; 
+    text-shadow: 1px 1px 2px black; 
+    animation: parpadeo 1.5s infinite; 
+    margin-top: 2px;
+}
+
+@keyframes parpadeo { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+.contenedor-barra { display: flex; align-items: center; gap: 8px; }
+.etiqueta-barra { color: white; font-size: 11px; font-weight: bold; text-shadow: 1px 1px 2px black; width: 20px; }
+
+.barra-fondo { 
+    flex-grow: 1; 
+    height: 16px; 
+    background-color: #1f2937; 
+    border: 2px solid #4b5563; 
+    border-radius: 4px; 
+    overflow: hidden; 
+    position: relative;
+    box-shadow: inset 0 0 4px rgba(0,0,0,0.8); 
+}
+
+.barra-llenado { height: 100%; width: 100%; transition: width 0.2s ease; }
+.barra-llenado.vida { background-color: #ef4444; }
+.barra-llenado.mana { background-color: #3b82f6; }
+
+.texto-num-barra {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: bold;
+    text-shadow: 1px 1px 1px #000, -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000;
+}
+
+/* --- BRCOINS --- */
+#contenedor-oro {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    width: max-content;
+    margin-top: 2px;
+}
+.icono-oro { font-size: 14px; }
+#txt-oro { color: #f59e0b; font-weight: bold; font-size: 14px; text-shadow: 1px 1px 2px #000; }
+.siglas-oro { color: #fbbf24; font-size: 10px; font-weight: bold; margin-left: 2px; }
+
+/* --- BOTÓN MENÚ --- */
+#contenedor-boton-inv { position: absolute; top: 15px; right: 15px; }
+#btn-toggle-inv { width: 65px; height: 45px; background-color: #1f2937; color: #f3f4f6; border: 2px solid #4b5563; border-radius: 6px; font-weight: bold; font-size: 11px; box-shadow: 0 4px 6px rgba(0,0,0,0.4); }
+
+/* --- VENTANA MENU DIABLO STYLE --- */
+#ventana-menu { position: absolute; top: 70px; right: 15px; width: 300px; background-color: rgba(11, 15, 25, 0.98); border: 2px solid #4b5563; border-radius: 8px; padding: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.8); z-index: 20; max-height: 85vh; overflow-y: auto; }
+.pestanas-inv { display: flex; gap: 4px; margin-bottom: 10px; border-bottom: 2px solid #374151; padding-bottom: 6px; }
+.tab-btn { flex-grow: 1; background-color: #1f2937; color: #9ca3af; border: 1px solid #374151; padding: 6px; font-size: 10px; font-weight: bold; border-radius: 4px; }
+.tab-btn.activa { background-color: #4b5563; color: white; border-color: #6b7280; }
+#btn-cerrar-inv { background: transparent; border: none; color: #ef4444; font-weight: bold; padding: 0 4px; font-size: 14px; }
+
+/* --- PANEL DE EQUIPAMIENTO INYECTADO --- */
+#panel-equipamiento {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    background-color: #111827;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #374151;
+}
+.slot-equipo {
+    height: 52px;
+    background-color: #0b0f19;
+    border: 1px solid #4b5563;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    font-size: 9px;
+    text-align: center;
+    color: #fff;
+    font-weight: bold;
+}
+.placeholder-eq {
+    color: #4b5563;
+    font-size: 8px;
+    font-weight: 800;
+}
+.divisor-ui {
+    height: 2px;
+    background: radial-gradient(circle, #4b5563 0%, rgba(0,0,0,0) 100%);
+    margin: 10px 0;
+}
+
+/* --- SECCIÓN INVENTARIO --- */
+.slots-inv { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.slot { width: 62px; height: 62px; background-color: #111827; border: 2px solid #374151; border-radius: 6px; display: flex; justify-content: center; align-items: center; position: relative; cursor: pointer; }
+.item-ui { width: 44px; height: 44px; border-radius: 6px; display: flex; justify-content: center; align-items: center; font-size: 18px;}
+
+/* --- SECCIÓN STATS --- */
+#contenedor-puntos-disponibles {
+    background-color: #111827; color: #34d399; padding: 6px; border-radius: 4px;
+    font-size: 12px; font-weight: bold; text-align: center; margin-bottom: 10px; border: 1px solid #059669;
+}
+.lista-stats { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px;}
+.fila-stat {
+    display: flex; justify-content: space-between; align-items: center;
+    background-color: #1f2937; padding: 6px 10px; border-radius: 6px; border: 1px solid #374151;
+}
+.stat-info-bloque { display: flex; flex-direction: column; gap: 1px; }
+.lbl-stat { color: #f3f4f6; font-size: 12px; }
+.lbl-stat b { color: #fbbf24; font-size: 13px; }
+.desc-stat-sub { color: #9ca3af; font-size: 9px; }
+.btn-subir-atrib {
+    background-color: #fbbf24; border: none; color: #111827;
+    width: 26px; height: 26px; border-radius: 4px; font-size: 14px; font-weight: bold;
+}
+.btn-subir-atrib:disabled { background-color: #4b5563; color: #9ca3af; opacity: 0.3; }
+
+/* --- TABLA DE ESTADÍSTICAS TOTALES (COMBATE) --- */
+#tabla-totales-combate {
+    background-color: #111827;
+    border: 1px solid #4b5563;
+    border-radius: 6px;
+    padding: 8px;
+    margin-top: 10px;
+}
+.titulo-tabla-totales {
+    font-size: 10px;
+    font-weight: bold;
+    color: #9ca3af;
+    text-align: center;
+    border-bottom: 1px dashed #374151;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
+.fila-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #e5e7eb;
+    padding: 3px 4px;
+}
+.fila-total:not(:last-child) {
+    border-bottom: 1px solid rgba(55, 65, 81, 0.4);
+}
+.valor-total {
+    font-weight: bold;
+    color: #38bdf8;
+}
+
+/* --- SECCIÓN SKILLS --- */
+#arbol-skills { display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto; padding-right: 4px; }
+.skill-nodo { display: flex; align-items: center; justify-content: space-between; background-color: #1f2937; padding: 8px; border-radius: 6px; border: 2px solid #374151; color: white; margin-bottom: 2px; }
+.skill-nodo.bloqueada { opacity: 0.4; background-color: #111827; border-color: #1f2937; }
+.skill-nodo.aprendida { border-color: #fbbf24; cursor: pointer; }
+
+.skill-info { display: flex; flex-direction: column; gap: 2px; width: 75%; }
+.skill-nombre { font-size: 12px; font-weight: bold; color: #f3f4f6; }
+.skill-nodo.aprendida .skill-nombre { color: #f59e0b; }
+.skill-detalles { font-size: 10px; color: #9ca3af; }
+
+.btn-subir-skill { background-color: #10b981; border: 1px solid #059669; color: white; border-radius: 4px; padding: 6px 10px; font-size: 12px; font-weight: bold; }
+.btn-subir-skill:disabled { background-color: #4b5563; border-color: #374151; color: #9ca3af; }
+
+/* --- MODAL BIND --- */
+#modal-asignar {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 100;
+}
+.modal-contenido {
+    background-color: #1f2937; border: 2px solid #fbbf24; padding: 20px; border-radius: 8px;
+    width: 240px; text-align: center; color: white; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+.modal-contenido h4 { color: #fbbf24; margin-bottom: 5px; font-size: 14px; }
+#modal-skill-nombre { font-size: 15px; font-weight: bold; margin-bottom: 15px; color: #fff; }
+.botones-modal-slots { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+.btn-bind-slot { background-color: #3b82f6; border: none; color: white; padding: 8px; font-weight: bold; border-radius: 4px; font-size: 12px; }
+.btn-bind-slot:active { background-color: #1d4ed8; }
+#btn-cancelar-modal { background-color: #e11d48; border: none; color: white; padding: 6px 12px; border-radius: 4px; font-size: 11px; }
+
+/* --- CONTROLES D-PAD --- */
+#dpad { position: absolute; bottom: 15px; left: 15px; display: flex; flex-direction: column; align-items: center; width: 132px; }
+.dpad-horizontal { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+.dpad-centro { width: 44px; height: 44px; }
+.btn-dir { width: 44px; height: 44px; background-color: #1f2937; color: white; border: 2px solid #4b5563; border-radius: 8px; font-size: 16px; }
+
+/* --- QUICK ACCESO POCIONES --- */
+#acceso-rapido-pociones { position: absolute; bottom: 165px; left: 20px; display: flex; flex-direction: column; gap: 14px; }
+.btn-pocion-rapida { width: 46px; height: 46px; border-radius: 50%; position: relative; border: 2px solid #ffffff; box-shadow: 0 4px 6px rgba(0,0,0,0.6); }
+.btn-pocion-rapida.hp { background-color: #dc2626; border-color: #b91c1c; }
+.btn-pocion-rapida.mp { background-color: #2563eb; border-color: #1d4ed8; }
+.contador-pocion { position: absolute; bottom: -2px; right: -4px; background-color: #111827; color: #fbbf24; font-size: 11px; font-weight: bold; padding: 1px 6px; border-radius: 10px; border: 1px solid #4b5563; }
+
+/* --- CONTROLES DERECHA --- */
+.controles-derecha { position: absolute; bottom: 15px; right: 15px; display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
+.botones-hechizos { display: flex; gap: 8px; }
+.btn-skill-accion { width: 48px; height: 48px; border-radius: 50%; background-color: #065f46; border: 2px solid #34d399; color: white; font-weight: bold; font-size: 11px; box-shadow: 0 4px 6px rgba(0,0,0,0.4); text-shadow: 1px 1px 1px #000; }
+.btn-skill-accion.muerto { background-color: #374151; border-color: #4b5563; color: #6b7280; opacity: 0.5; }
+#btn-ataque { width: 80px; height: 80px; background-color: #b45309; color: white; border: 3px solid #78350f; border-radius: 50%; font-weight: bold; font-size: 13px; box-shadow: 0 4px 6px rgba(0,0,0,0.5); }
+
+.oculto { display: none !important; }

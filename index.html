@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RPG Mobile - Equipment & Loot Edition</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="ui-container">
+        
+        <div id="barras-superiores">
+            <div id="info-nivel">LVL: <span id="txt-lvl">1</span> (<span id="txt-exp">0</span>/<span id="txt-maxexp">100</span> EXP)</div>
+            
+            <div class="contenedor-barra">
+                <span class="etiqueta-barra">HP</span>
+                <div class="barra-fondo">
+                    <div class="barra-llenado vida" id="barra-vida"></div>
+                    <span class="texto-num-barra" id="num-vida">100/100</span>
+                </div>
+            </div>
+            
+            <div class="contenedor-barra">
+                <span class="etiqueta-barra">MP</span>
+                <div class="barra-fondo">
+                    <div class="barra-llenado mana" id="barra-mana"></div>
+                    <span class="texto-num-barra" id="num-mana">60/60</span>
+                </div>
+            </div>
+
+            <div id="contenedor-oro">
+                <span class="icono-oro">🪙</span> <span id="txt-oro">0</span> <span class="siglas-oro">BrCoins</span>
+            </div>
+            <div id="puntos-skill-alerta" class="oculto">¡Tienes Puntos pendientes!</div>
+        </div>
+
+        <div id="contenedor-boton-inv">
+            <button id="btn-toggle-inv">MENÚ</button>
+        </div>
+
+        <div id="ventana-menu" class="oculto">
+            <div class="pestanas-inv">
+                <button id="tab-inv" class="tab-btn activa">BAG</button>
+                <button id="tab-stats" class="tab-btn">STATS</button>
+                <button id="tab-skills" class="tab-btn">SKILLS</button>
+                <button id="btn-cerrar-inv">X</button>
+            </div>
+            
+            <div id="contenido-inventario" class="seccion-menu">
+                <div id="panel-equipamiento">
+                    <div class="slot-equipo" data-slot="casco" id="eq-casco"><span class="placeholder-eq">CASCO</span></div>
+                    <div class="slot-equipo" data-slot="collar" id="eq-collar"><span class="placeholder-eq">CUELLO</span></div>
+                    <div class="slot-equipo" data-slot="arma" id="eq-arma"><span class="placeholder-eq">ARMA</span></div>
+                    <div class="slot-equipo" data-slot="armadura" id="eq-armadura"><span class="placeholder-eq">PETO</span></div>
+                    <div class="slot-equipo" data-slot="escudo" id="eq-escudo"><span class="placeholder-eq">ESCUDO</span></div>
+                    <div class="slot-equipo" data-slot="guantes" id="eq-guantes"><span class="placeholder-eq">MANOS</span></div>
+                    <div class="slot-equipo" data-slot="pantalones" id="eq-pantalones"><span class="placeholder-eq">PIERNAS</span></div>
+                    <div class="slot-equipo" data-slot="pendiente" id="eq-pendiente"><span class="placeholder-eq">ARETE</span></div>
+                    <div class="slot-equipo" data-slot="botas" id="eq-botas"><span class="placeholder-eq">BOTAS</span></div>
+                </div>
+                <div class="divisor-ui"></div>
+                <div class="slots-inv" id="slots-contenedor"></div>
+            </div>
+
+            <div id="contenido-stats" class="seccion-menu oculto">
+                <div id="contenedor-puntos-disponibles">Puntos Disponibles: <span id="stat-puntos-valores">0</span></div>
+                <div class="lista-stats">
+                    <div class="fila-stat">
+                        <div class="stat-info-bloque">
+                            <span class="lbl-stat">Fuerza: <b id="val-fuerza">10</b></span>
+                            <span class="desc-stat-sub">Aumenta Daño Físico</span>
+                        </div>
+                        <button class="btn-subir-atrib" data-stat="fuerza">+</button>
+                    </div>
+                    <div class="fila-stat">
+                        <div class="stat-info-bloque">
+                            <span class="lbl-stat">Destreza: <b id="val-destreza">10</b></span>
+                            <span class="desc-stat-sub">Defensa e Índices</span>
+                        </div>
+                        <button class="btn-subir-atrib" data-stat="destreza">+</button>
+                    </div>
+                    <div class="fila-stat">
+                        <div class="stat-info-bloque">
+                            <span class="lbl-stat">Vitalidad: <b id="val-vitalidad">10</b></span>
+                            <span class="desc-stat-sub">Aumenta Max HP (+5)</span>
+                        </div>
+                        <button class="btn-subir-atrib" data-stat="vitalidad">+</button>
+                    </div>
+                    <div class="fila-stat">
+                        <div class="stat-info-bloque">
+                            <span class="lbl-stat">Magia: <b id="val-magia">10</b></span>
+                            <span class="desc-stat-sub">Max MP (+3) y Hechizos</span>
+                        </div>
+                        <button class="btn-subir-atrib" data-stat="magia">+</button>
+                    </div>
+                </div>
+
+                <div id="tabla-totales-combate">
+                    <div class="titulo-tabla-totales">TOTALES DE COMBATE</div>
+                    <div class="fila-total">
+                        <span>⚔️ Daño Físico:</span>
+                        <span id="total-dano-fisico" class="valor-total">20</span>
+                    </div>
+                    <div class="fila-total">
+                        <span>🛡️ Defensa Total:</span>
+                        <span id="total-defensa" class="valor-total">10</span>
+                    </div>
+                    <div class="fila-total">
+                        <span>✨ Daño Mágico:</span>
+                        <span id="total-dano-magico" class="valor-total">10</span>
+                    </div>
+                    <div class="fila-total">
+                        <span>⚡ Vel. Ataque:</span>
+                        <span id="total-vel-atk" class="valor-total">100%</span>
+                    </div>
+                    <div class="fila-total">
+                        <span>💥 Daño Crítico:</span>
+                        <span id="total-crit" class="valor-total">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="contenido-skills" class="seccion-menu oculto">
+                <div id="arbol-skills"></div>
+            </div>
+        </div>
+
+        <div id="modal-asignar" class="oculto">
+            <div class="modal-contenido">
+                <h4>Asignar Habilidad</h4>
+                <p id="modal-skill-nombre">Habilidad</p>
+                <div class="botones-modal-slots">
+                    <button class="btn-bind-slot" data-slot="0">Botón S1</button>
+                    <button class="btn-bind-slot" data-slot="1">Botón S2</button>
+                    <button class="btn-bind-slot" data-slot="2">Botón S3</button>
+                </div>
+                <button id="btn-cancelar-modal">Cancelar</button>
+            </div>
+        </div>
+
+        <div id="dpad">
+            <button id="btn-up" class="btn-dir">▲</button>
+            <div class="dpad-horizontal">
+                <button id="btn-left" class="btn-dir">◀</button>
+                <div class="dpad-centro"></div>
+                <button id="btn-right" class="btn-dir">▶</button>
+            </div>
+            <button id="btn-down" class="btn-dir">▼</button>
+        </div>
+
+        <div id="acceso-rapido-pociones">
+            <button id="quick-hp" class="btn-pocion-rapida hp">
+                <span class="contador-pocion" id="cant-quick-hp">0</span>
+            </button>
+            <button id="quick-mp" class="btn-pocion-rapida mp">
+                <span class="contador-pocion" id="cant-quick-mp">0</span>
+            </button>
+        </div>
+
+        <div class="controles-derecha">
+            <div class="botones-hechizos">
+                <button id="btn-skill-1" class="btn-skill-accion muerto" data-index="0">S1</button>
+                <button id="btn-skill-2" class="btn-skill-accion muerto" data-index="1">S2</button>
+                <button id="btn-skill-3" class="btn-skill-accion muerto" data-index="2">S3</button>
+            </div>
+            <button id="btn-ataque">GOLPE</button>
+        </div>
+
+    </div>
+
+    <script src="database.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
